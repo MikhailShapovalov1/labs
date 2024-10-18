@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace labs.lab2
 {
-    internal class zadanie4
+    internal class Program
     {
         static void Main()
         {
             int n = Convert.ToInt32(Console.ReadLine());
-            int Count = 0;
+            int Lenght = 0;
             for (int i = 0; i < n; i++)
             {
                 int a = Convert.ToInt32(Console.ReadLine());
-                if (a % 2 == 0) Count++;
+                if (a % 2 == 0) Lenght++;
             }
-            Console.WriteLine("длина подпоследовательности, состоящей из четных элемементов " + Count);
+            Console.WriteLine("длина подпоследовательности, состоящей из четных элемементов " + Lenght);
 
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-class zadanie1
+internal class zadanie1
 {
     static void Main()
     {
