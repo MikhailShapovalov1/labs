@@ -1,24 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace labs.lab2
+class Program
 {
-    internal class Program
+    static void Main()
     {
-        static void Main()
+        while (true)
         {
-            int n = Convert.ToInt32(Console.ReadLine());
-            int Lentgh = 0;
-            for (int i = 0; i < n; i++)
-            {
-                int a = Convert.ToInt32(Console.ReadLine());
-                if (a % 2 == 0) Lentgh++;
-            }
-            Console.WriteLine("длина подпоследовательности, состоящей из четных элемементов " + Count);
+            int currentNumber = Convert.ToInt32(Console.ReadLine());
 
+            if (currentNumber > 0)
+            {
+                int number = 0;
+                while (currentNumber > 0)
+                {
+                    int n = currentNumber % 10;
+                    currentNumber = (currentNumber - n) / 10;
+
+                    if (n % 2 != 0)
+                    {
+                        number = number * 10 + n;
+                    }
+                }
+
+                if (number != 0)
+                {
+                    Console.WriteLine($"число: {number}");
+                }
+                else
+                {
+                    Console.WriteLine("нечетных цифр нет");
+                }
+            }
+            else
+            {
+                break;
+            }
         }
+
+
+
     }
 }
