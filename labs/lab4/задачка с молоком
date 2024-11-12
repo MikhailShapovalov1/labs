@@ -1,0 +1,56 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        using (StreamReader fin = new StreamReader("data.txt"))
+        {
+            int n = int.Parse(fin.ReadLine());
+            double x1, y1, z1, x2, y2, z2, c1, c2;
+            string[] firstLine = fin.ReadLine().Split();
+            x1 = double.Parse(firstLine[0]);
+            y1 = double.Parse(firstLine[1]);
+            z1 = double.Parse(firstLine[2]);
+            x2 = double.Parse(firstLine[3]);
+            y2 = double.Parse(firstLine[4]);
+            z2 = double.Parse(firstLine[5]);
+            c1 = double.Parse(firstLine[6]);
+            c2 = double.Parse(firstLine[7]);
+
+            double min = 1000 * (c2 - c1 * (x2 * y2 + x2 * z2 + y2 * z2) / (x1 * y1 + x1 * z1 + y1 * z1)) / 
+                ((x2 * y2 * z2) - x1 * y1 * z1 * (x2 * y2 + x2 * z2 + y2 * z2) / (x1 * y1 + x1 * z1 + y1 * z1));
+            int d = 1;
+
+            for (int i = 1; i < n; i++)
+            {
+                string[] line = fin.ReadLine().Split();
+                x1 = double.Parse(line[0]);
+                y1 = double.Parse(line[1]);
+                z1 = double.Parse(line[2]);
+                x2 = double.Parse(line[3]);
+                y2 = double.Parse(line[4]);
+                z2 = double.Parse(line[5]);
+                c1 = double.Parse(line[6]);
+                c2 = double.Parse(line[7]);
+
+                double currentValue = 1000 * (c2 - c1 * (x2 * y2 + x2 * z2 + y2 * z2) / 
+                    (x1 * y1 + x1 * z1 + y1 * z1)) / 
+                    ((x2 * y2 * z2) - x1 * y1 * z1 * (x2 * y2 + x2 * z2 + y2 * z2) / 
+                    (x1 * y1 + x1 * z1 + y1 * z1));
+
+                if (min > currentValue)
+                {
+                    min = currentValue;
+                    d = i + 1;
+                }
+            }
+
+            using (StreamWriter fout = new StreamWriter("result.txt"))
+            {
+                fout.WriteLine($"{d} {(int)(min * 100 + 0.5) / 100.0}");
+            }
+            Console.WriteLine($"{d} {(int)(min * 100 + 0.5) / 100.0}");
+        }
+    }
+}
