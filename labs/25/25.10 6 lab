@@ -1,0 +1,84 @@
+using System;
+
+class Program
+{/*дан массив n на m
+1.отсортировать столбцы по убыванию произведения элементов в столбце (встроенные сортировки отмена)
+2.сформировать одномерный массив из максимальных элементов строк*/
+    static void Main()
+    {
+        //задание 1
+        int n = 3; // количество строк
+        int m = 4; // количество столбцов
+
+        // Пример массива
+        int[,] array = {
+            { 1, 2, 3, 4 },
+            { 5, 6, 7, 8 },
+            { 9, 10, 11, 12 }
+        };
+
+        // Вычисление произведений для каждого столбца
+        int[] products = new int[m];
+        for (int j = 0; j < m; j++)
+        {
+            products[j] = 1;
+            for (int i = 0; i < n; i++)
+            {
+                products[j] *= array[i, j];
+            }
+        }
+
+        // Сортировка столбцов по убыванию произведений
+        for (int i = 0; i < m - 1; i++)
+        {
+            for (int j = i + 1; j < m; j++)
+            {
+                if (products[i] < products[j])
+                {
+                    // Меняем произведения местами
+                    int temp = products[i];
+                    products[i] = products[j];
+                    products[j] = temp;
+
+                    // Меняем столбцы местами
+                    for (int k = 0; k < n; k++)
+                    {
+                        int tempVal = array[k, i];
+                        array[k, i] = array[k, j];
+                        array[k, j] = tempVal;
+                    }
+                }
+            }
+        }
+
+        // Вывод отсортированного массива
+        Console.WriteLine("Отсортированный массив по убыванию произведений:");
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                Console.Write(array[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+        //задание 2
+        int[] strMaxArr = new int[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            int max = int.MinValue;
+
+            for (int j = 0; j < m; j++)
+            {
+                max = Math.Max(array[i, j], max);
+            }
+
+            strMaxArr[i] = max;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write($"{strMaxArr[i]} ");
+        }
+    }
+}
