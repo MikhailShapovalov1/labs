@@ -1,0 +1,88 @@
+using System;
+class Program
+{
+    /*
+      02/12
+      класс с мэйн, методы, поля в том же классе, где и мэйн. лучше описать отдельный класс. поля в паблике. 2 поля х и у(свойства не трогаем). 3 конструктора. 1 по умолчанию. значения = 0. 2 параметр х, у = 0. 3 значения х и у. при создании объекта, когда передались 2 параметра.
+    4 метода. вычисления и вывод результата. 1. сумма, 2. произведение, 3.разность, 4.деление. вывод внутри метода. 
+    в мэйне создание 3 объектов с использованием 3  разных конструкторов. для каждого из объектов 4 метода. предусмотреть деление на 0 в методе деления. при делении на 0 вывести соощение "делить нельзя"
+    */
+
+}
+class XandY
+{
+    public int x; //2 поля
+    public int y;
+    public XandY() // 1 конструктор значения по нулю
+    {
+        x = 0;
+        y = 0;
+    }
+    public XandY(int Valuex) // 2 конструктор значение х, y =0
+    {
+        x = Valuex;
+        y = 0;
+    }
+    public XandY(int Xvalue, int Yvalue) // 3 конструктор x,y принимают значения
+    {
+        x = Xvalue;
+        y = Yvalue;
+    }
+    public void Sum()
+    {
+        int result = x + y;
+        Console.WriteLine($"Сумма: {result}");
+    }
+    public void Mult()
+    {
+        int result = x * y;
+        Console.WriteLine($"Произведение: {result}");
+    }
+    public void Raznost()
+    {
+        int result = x - y;
+        Console.WriteLine($"Разность: {result}");
+    }
+    public void Delenie()
+    {
+        if (y == 0)
+        {
+            Console.WriteLine("Делить нельзя");
+        }
+        else
+        {
+            double result = (double)x / y;
+            Console.WriteLine($"Деление: {result}");
+        }
+    }
+    static void Main()
+    {
+        Console.WriteLine("Введите значение х для 1 обьекта");
+        Console.WriteLine("Введите значение y для 1 обьекта");
+        XandY object1 = new XandY(Convert.ToInt32(Console.ReadLine()), Convert.ToInt32(Console.ReadLine()));
+        Console.WriteLine("Введите значение х для 2 обьекта");
+        Console.WriteLine("Введите значение y для 2 обьекта");
+        XandY object2 = new XandY(Convert.ToInt32(Console.ReadLine()), Convert.ToInt32(Console.ReadLine()));
+        Console.WriteLine("Введите значение х для 3 обьекта");
+        Console.WriteLine("Введите значение y для 3 обьекта");
+        XandY object3 = new XandY(Convert.ToInt32(Console.ReadLine()), Convert.ToInt32(Console.ReadLine()));
+        object1.Sum();
+        object1.Mult();
+        object1.Raznost();
+        object1.Delenie();
+
+        Console.WriteLine();
+
+        object2.Sum();
+        object2.Mult();
+        object2.Raznost();
+        object2.Delenie();
+
+        Console.WriteLine();
+
+        object3.Sum();
+        object3.Mult();
+        object3.Raznost();
+        object3.Delenie();
+    }
+}
