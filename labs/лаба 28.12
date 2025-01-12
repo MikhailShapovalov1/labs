@@ -1,0 +1,242 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Zombie
+{
+    internal class Program
+    {
+        private static List<Zombie> _zombieBase = new List<Zombie>();
+        private static bool _isZombieBaseFilled = false;
+
+
+        static void Main(string[] args)
+        {
+            int input;
+
+            do
+            {
+                ShowMenu();
+                 if (!int.TryParse(Console.ReadLine(), out input))
+                 {
+                     Console.WriteLine("Некорректный ввод");
+                    continue;
+                 }
+                switch (input)
+                {
+                    case 1:
+                        EnterZombieBase();
+                        break;
+                    case 2:
+                        BirthDateSelection(_zombieBase);
+                        break;
+                    case 3:
+                        ShowFarmers(_zombieBase);
+                        break;
+                    case 4:
+                        ShowDrivers(_zombieBase);
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        Console.WriteLine("Неверный пункт меню.");
+                        break;
+                }
+            } while (input != 5);
+        }
+
+        public static void ShowMenu()
+        {
+            Console.WriteLine("\nВыберите меню:\n1) Заполнение базы данных\n2) Выборка по году рождения" +
+                              "\n3) Вывести всех фермеров\n4) Вывести всех автомобилистов\n5) Выход");
+        }
+         private static int ReadPositiveInteger(string message)
+        {
+             int value;
+            Console.Write(message);
+             while (!int.TryParse(Console.ReadLine(), out value) || value <= 0)
+            {
+                 Console.Write($"Некорректный ввод. {message}");
+            }
+            return value;
+        }
+
+
+        public static void EnterZombieBase()
+        {
+            Console.WriteLine("Введите количество фермеров");
+            int farmerZombiesCount = ReadPositiveInteger("");
+            Console.WriteLine("Введите количество водителей");
+            int driverZombiesCount = ReadPositiveInteger("");
+
+             for (int i = 0; i < farmerZombiesCount; i++)
+             {
+                 Console.WriteLine($"\nВведите данные для фермера {i + 1}:");
+                 Console.Write("Имя: ");
+                string name = Console.ReadLine();
+                 int birthDate = ReadPositiveInteger("Введите год рождения: ");
+                int exp = ReadPositiveInteger("Введите опыт: ");
+                 int instrumentsCount = ReadPositiveInteger("Введите количество инструментов: ");
+
+                 string[] instruments = new string[instrumentsCount];
+                Console.WriteLine("Введите инструменты:");
+                for (int j = 0; j < instrumentsCount; j++)
+                {
+                     instruments[j] = Console.ReadLine();
+                 }
+
+                 _zombieBase.Add(new ZombieFarmer(name, birthDate, exp, instruments));
+            }
+            for (int i = 0; i < driverZombiesCount; i++)
+            {
+                Console.WriteLine($"\nВведите данные для водителя {i + 1}:");
+                Console.Write("Имя: ");
+                string name = Console.ReadLine();
+                 int birthDate = ReadPositiveInteger("Введите год рождения: ");
+                int carsCount = ReadPositiveInteger("Введите количество автомобилей: ");
+
+                 string[] cars = new string[carsCount];
+                 Console.WriteLine("Введите автомобили:");
+                for (int j = 0; j < carsCount; j++)
+                {
+                    cars[j] = Console.ReadLine();
+                }
+
+                 _zombieBase.Add(new ZombieDriver(name, birthDate, cars));
+             }
+
+
+             _isZombieBaseFilled = true;
+            Console.WriteLine("База данных зомби успешно заполнена.");
+        }
+
+
+        public static void BirthDateSelection(List<Zombie> zombies)
+        {
+           if(!CheckDatabaseFilled())
+                return;
+
+            Console.Write("Введите год рождения для поиска: ");
+             int birthDate;
+             if(!int.TryParse(Console.ReadLine(), out birthDate))
+             {
+                 Console.WriteLine("Некорректный ввод");
+                 return;
+             }
+
+
+            Console.WriteLine("\nРезультаты поиска по году рождения:\n");
+
+            bool found = false;
+            foreach (var zombie in zombies)
+             {
+                 if (zombie.BirthDate == birthDate)
+                 {
+                     PrintZombieInfo(zombie);
+                     found = true;
+                 }
+             }
+            if(!found)
+                Console.WriteLine("Зомби с таким годом рождения не найдены.");
+
+        }
+
+
+        public static void ShowDrivers(List<Zombie> zombies)
+        {
+            if(!CheckDatabaseFilled())
+                return;
+
+            Console.WriteLine("\nЗомби-водители:\n");
+            bool found = false;
+             foreach (var zombie in zombies)
+             {
+                 if (zombie is ZombieDriver driver)
+                 {
+                     PrintZombieInfo(zombie);
+                     found = true;
+                }
+            }
+            if(!found)
+                Console.WriteLine("Зомби-водители не найдены.");
+        }
+
+
+       public static void ShowFarmers(List<Zombie> zombies)
+       {
+           if(!CheckDatabaseFilled())
+                return;
+
+           Console.WriteLine("\nЗомби-фермеры:\n");
+           bool found = false;
+            foreach (var zombie in zombies)
+            {
+                if (zombie is ZombieFarmer farmer)
+                {
+                     PrintZombieInfo(zombie);
+                    found = true;
+                }
+            }
+           if(!found)
+                Console.WriteLine("Зомби-фермеры не найдены.");
+       }
+       private static bool CheckDatabaseFilled()
+        {
+            if (!_isZombieBaseFilled)
+            {
+                 Console.WriteLine("База данных не заполнена.");
+                return false;
+            }
+            return true;
+        }
+         private static void PrintZombieInfo(Zombie zombie)
+         {
+             Console.WriteLine($"Имя: {zombie.Name}, Год рождения: {zombie.BirthDate}");
+            if (zombie is ZombieFarmer farmer)
+            {
+                Console.WriteLine($"   Опыт: {farmer.Experience}, Инструменты: {string.Join(", ", farmer.Instruments)}");
+            }
+            else if(zombie is ZombieDriver driver)
+            {
+                Console.WriteLine($"   Автомобили: {string.Join(", ", driver.Cars)}");
+            }
+        }
+    }
+
+
+   public abstract class Zombie
+    {
+        public string Name { get; }
+        public int BirthDate { get; }
+
+        public Zombie(string name, int birthDate)
+        {
+            Name = name;
+            BirthDate = birthDate;
+        }
+    }
+
+
+    public class ZombieFarmer : Zombie
+    {
+        public int Experience { get; }
+        public string[] Instruments { get; }
+
+        public ZombieFarmer(string name, int birthDate, int experience, string[] instruments) : base(name, birthDate)
+        {
+            Experience = experience;
+            Instruments = instruments;
+        }
+    }
+
+
+    public class ZombieDriver : Zombie
+    {
+        public string[] Cars { get; }
+
+        public ZombieDriver(string name, int birthDate, string[] cars) : base(name, birthDate)
+        {
+            Cars = cars;
+        }
+    }
+}
