@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Bakery
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Bread[] breads = new Bread[]
+            {
+                new Bread(200, 1, "Ржаной хлеб", 30),
+                new Bread(220, 1, "Белый хлеб", 25),
+                new Bread(180, 1, "Чиабатта", 35)
+            };
+
+            Cake[] cakes = new Cake[]
+            {
+                new Cake(180, 2, "Медовик", new[] { "Мед", "Мука", "Сметана" }, 40),
+                new Cake(170, 2, "Наполеон", new[] { "Слоеное тесто", "Заварной крем" }, 50),
+                new Cake(200, 2, "Шоколадный торт", new[] { "Шоколад", "Мука", "Яйца" }, 45)
+            };
+
+            int searchTemperature = 180;
+
+           Console.WriteLine($"Продукты, приготовленные при температуре {searchTemperature}:");
+           var foundProducts = FindProductsByTemperature(searchTemperature, breads.Cast<IBakedProduct>().Concat(cakes));
+
+           foreach (var product in foundProducts)
+           {
+                Console.WriteLine(product.Temperature);
+           }
+        }
+
+         // Метод для поиска продуктов по температуре
+       public static IEnumerable<IBakedProduct> FindProductsByTemperature(int temperature, IEnumerable<IBakedProduct> products)
+       {
+            return products.Where(product => product.Temperature == temperature);
+        }
+    }
+
+    // Интерфейс для печных продуктов
+    public interface IBakedProduct
+    {
+         int Temperature { get; }
+         int BakingMode { get; }
+    }
+
+     // Базовый класс для печей
+    public abstract class Furnace : IBakedProduct
+    {
+        public int Temperature { get; }
+        public int BakingMode { get; }
+
+
+         public Furnace(int temperature, int mode)
+        {
+            Temperature = temperature;
+            BakingMode = mode;
+        }
+    }
+
+    // Класс для тортов
+    public class Cake : Furnace, IBakedProduct
+    {
+        public string CakeName { get; }
+        public List<string> Ingredients { get; }
+        public int BakingTime { get; }
+
+
+        public Cake(int temperature, int mode, string name, string[] ingridients, int bakeTime) : base(temperature, mode)
+        {
+            CakeName = name;
+            BakingTime = bakeTime;
+            Ingredients = ingridients.ToList(); // Используем ToList() для создания глубокой копии
+        }
+    }
+
+     // Класс для хлеба
+    public class Bread : Furnace, IBakedProduct
+    {
+        public string BreadName { get; }
+        public int BakingTime { get; }
+
+         public Bread(int temperature, int mode, string name, int bakeTime) : base(temperature, mode)
+        {
+            BreadName = name;
+            BakingTime = bakeTime;
+        }
+    }
+}
