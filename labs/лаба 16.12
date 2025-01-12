@@ -1,0 +1,177 @@
+using System;
+using System.Collections.Generic;
+
+namespace LR11
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int studentsCount;
+            Student[] students = null;
+            bool isDataBaseFilled = false;
+            int input;
+
+            Console.WriteLine("Введите количество студентов:");
+
+            if (!int.TryParse(Console.ReadLine(), out studentsCount) || studentsCount <= 0)
+            {
+                Console.WriteLine("Некорректный ввод. Выход из программы.");
+                return;
+            }
+
+            students = new Student[studentsCount];
+
+            do
+            {
+                ShowMenu();
+                if (!int.TryParse(Console.ReadLine(), out input))
+                {
+                     Console.WriteLine("Некорректный ввод");
+                     continue;
+                }
+
+                switch (input)
+                {
+                    case 1:
+                        EnterDataBase(students, out isDataBaseFilled);
+                        break;
+                    case 2:
+                        BirthDateSelection(students, isDataBaseFilled);
+                        break;
+                    case 3:
+                        ClassSelection(students, isDataBaseFilled);
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        Console.WriteLine("Неверный пункт меню.");
+                        break;
+                }
+            } while (input != 4);
+        }
+
+
+        public static void ShowMenu()
+        {
+            Console.WriteLine("\nВыберите меню:\n1) Заполнение базы данных\n2) Выборка по году рождения\n3) Выборка по классу\n4) Выход");
+        }
+
+        public static void EnterDataBase(Student[] students, out bool isDataBaseFilled)
+        {
+            for (int i = 0; i < students.Length; i++)
+            {
+                Console.WriteLine($"\nВведите данные для студента {i + 1}:");
+                Console.Write("Имя: ");
+                string name = Console.ReadLine();
+
+                Console.Write("Год рождения: ");
+                int birthDate;
+                while (!int.TryParse(Console.ReadLine(), out birthDate))
+                {
+                    Console.WriteLine("Некорректный ввод года рождения. Повторите.");
+                    Console.Write("Год рождения: ");
+                }
+
+                Console.Write("Класс: ");
+                string className = Console.ReadLine();
+
+                Console.Write("Номер телефона: ");
+                string mobileNumber = Console.ReadLine();
+
+                students[i] = new Student(name, birthDate, className, mobileNumber);
+            }
+
+            isDataBaseFilled = true;
+            Console.WriteLine("База данных успешно заполнена.");
+        }
+
+        public static void BirthDateSelection(Student[] students, bool isDataBaseFilled)
+        {
+            if (!isDataBaseFilled)
+            {
+                Console.WriteLine("База данных не заполнена.");
+                return;
+            }
+
+            Console.Write("Введите год рождения для поиска: ");
+            int birthDate;
+            if (!int.TryParse(Console.ReadLine(), out birthDate))
+            {
+                Console.WriteLine("Некорректный ввод года.");
+                return;
+            }
+
+            bool found = false;
+             Console.WriteLine("\nРезультаты поиска по году рождения:\n");
+             foreach (var student in students)
+            {
+
+                if (student.BirthDate == birthDate)
+                {
+                    PrintStudentInfo(student);
+                     found = true;
+                }
+            }
+           if (!found)
+             {
+                 Console.WriteLine("Студенты с таким годом рождения не найдены.");
+             }
+        }
+
+       public static void ClassSelection(Student[] students, bool isDataBaseFilled)
+        {
+            if (!isDataBaseFilled)
+            {
+                Console.WriteLine("База данных не заполнена.");
+                return;
+            }
+
+            Console.Write("Введите класс для поиска: ");
+            string className = Console.ReadLine();
+            bool found = false;
+
+            Console.WriteLine("\nРезультаты поиска по классу:\n");
+            foreach (var student in students)
+            {
+                 if (student.Class == className)
+                 {
+                     PrintStudentInfo(student);
+                     found = true;
+                 }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("Студенты этого класса не найдены.");
+            }
+
+        }
+
+        public static void PrintStudentInfo(Student student)
+        {
+            Console.WriteLine($"Имя: {student.Name}, Год рождения: {student.BirthDate}, Класс: {student.Class}, Телефон: {student.MobileNumber}");
+        }
+    }
+
+    public class Student
+    {
+        private string _name;
+        private int _birthDate;
+        private string _class;
+        private string _mobileNumber;
+
+        public Student(string name, int birthDate, string className, string mobileNumber)
+        {
+            _name = name;
+            _birthDate = birthDate;
+            _class = className;
+            _mobileNumber = mobileNumber;
+        }
+
+        public string Name => _name;
+        public int BirthDate => _birthDate;
+        public string Class => _class;
+        public string MobileNumber => _mobileNumber;
+    }
+}
