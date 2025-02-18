@@ -1,0 +1,174 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SubscriberManagement
+{
+    public class PhoneNumber
+    {
+        public int Number { get; }
+        public string OperatorName { get; }
+        public int ConnectionDate { get; }
+
+        public PhoneNumber(int number, string operatorName, int connectionDate)
+        {
+            Number = number;
+            OperatorName = operatorName;
+            ConnectionDate = connectionDate;
+        }
+
+        public override string ToString()
+        {
+            return $"Номер: {Number}, Оператор: {OperatorName}, Дата подключения: {ConnectionDate}";
+        }
+    }
+
+    public class Subscriber
+    {
+        public string Name { get; }
+        public string City { get; }
+        public List<PhoneNumber> PhoneNumbers { get; }
+
+        public Subscriber(string name, List<PhoneNumber> phoneNumbers, string city)
+        {
+            Name = name;
+            PhoneNumbers = phoneNumbers ?? throw new ArgumentNullException(nameof(phoneNumbers));
+        public override string ToString()
+        {
+            return $"Имя: {Name}, Город: {City}, Номера: {string.Join(", ", PhoneNumbers)}";
+        }
+    }
+
+    public class SubscriberManager
+    {
+        private static List<Subscriber> _subscribers = new List<Subscriber>();
+
+        public static void AddSubscriber(Subscriber subscriber)
+        {
+            _subscribers.Add(subscriber);
+        }
+
+        public static List<Subscriber> FindSubscribersByPhoneNumber(int phoneNumber)
+        {
+            return _subscribers
+                .Where(subscriber => subscriber.PhoneNumbers.Any(phone => phone.Number == phoneNumber))
+                .ToList();
+        }
+
+        public static List<Subscriber> FindSubscribersByOperator(string operatorName)
+        {
+            return _subscribers
+                .Where(subscriber => subscriber.PhoneNumbers.Any(phone => phone.OperatorName == operatorName))
+                .ToList();
+        }
+
+        public static List<Subscriber> FindSubscribersByConnectionDate(int connectionDate)
+        {
+            return _subscribers
+                .Where(subscriber => subscriber.PhoneNumbers.Any(phone => phone.ConnectionDate == connectionDate))
+                .ToList();
+        }
+
+        public static List<Subscriber> FindSubscribersByCity(string city)
+        {
+            return _subscribers
+                .Where(subscriber => subscriber.City == city)
+                .ToList();
+        }
+
+
+        public static void DisplayAllSubscribers()
+        {
+            if (_subscribers.Count == 0)
+            {
+                Console.WriteLine("База данных не заполнена.");
+                return;
+            }
+
+            foreach (var subscriber in _subscribers)
+            {
+                Console.WriteLine(subscriber);
+            }
+        }
+
+
+        public static void Menu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\nМеню:");
+                Console.WriteLine("1. Вывести список всех абонентов");
+                Console.WriteLine("2. Поиск по городу");
+                Console.WriteLine("3. Поиск по номеру телефона");
+                Console.WriteLine("4. Поиск по оператору связи");
+                Console.WriteLine("5. Поиск по году подключения");
+                Console.WriteLine("0. Выход");
+
+                Console.Write("Выберите действие: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        DisplayAllSubscribers();
+                        break;
+                    case "2":
+                        Console.Write("Введите город: ");
+                        string city = Console.ReadLine();
+                        DisplaySearchResults(FindSubscribersByCity(city));
+                        break;
+                    case "3":
+                        Console.Write("Введите номер телефона: ");
+                        if (int.TryParse(Console.ReadLine(), out int phoneNumber))
+                        {
+                            DisplaySearchResults(FindSubscribersByPhoneNumber(phoneNumber));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Некорректный формат номера телефона.");
+                        }
+                        break;
+                    case "4":
+                        Console.Write("Введите оператора связи: ");
+                        string operatorName = Console.ReadLine();
+                        DisplaySearchResults(FindSubscribersByOperator(operatorName));
+                        break;
+                    case "5":
+                        Console.Write("Введите год подключения: ");
+                        if (int.TryParse(Console.ReadLine(), out int connectionDate))
+                        {
+                            DisplaySearchResults(FindSubscribersByConnectionDate(connectionDate));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Некорректный формат года.");
+                        }
+                        break;
+                    case "0":
+                        Console.WriteLine("Выход из программы.");
+                        return;
+                    default:
+                        Console.WriteLine("Некорректный выбор.");
+                        break;
+                }
+            }
+        }
+
+
+        private static void DisplaySearchResults(List<Subscriber> results)
+        {
+            if (results.Count == 0)
+            {
+                Console.WriteLine("Абоненты не найдены.");
+            }
+            else
+            {
+                Console.WriteLine("Найденные абоненты:");
+                foreach (var subscriber in results)
+                {
+                    Console.WriteLine(subscriber);
+                }
+            }
+        }
+    }
+}
