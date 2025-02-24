@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+
+public class BracketValidator
+{
+    public static bool IsValid(string expression)
+    {
+        Stack<char> bracketStack = new Stack<char>();
+
+        foreach (char c in expression)
+        {
+            if (c == '(' || c == '[' || c == '{')
+            {
+                bracketStack.Push(c);
+            }
+            else if (c == ')' || c == ']' || c == '}')
+            {
+                if (bracketStack.Count == 0)
+                {
+                    return false; 
+                }
+            }
+           
+        }
+
+        return bracketStack.Count == 0;
+    }
+
+    private static bool IsMatchingPair(char opening, char closing)
+    {
+        if (opening == '(' && closing == ')') return true;
+        if (opening == '[' && closing == ']') return true;
+        if (opening == '{' && closing == '}') return true;
+        return false;
+    }
+
+    public static void Main(string[] args)
+    {
+        string expression1 = "[(1+2)*{3-4}]"; 
+        string expression2 = "(1+2*[3-4)";  
+        string expression3 = "((1+2)";        
+        string expression4 = "{[()]";       
+        string expression5 = "}{";            
+        string expression6 = "(]";             
+
+
+        Console.WriteLine($"{expression1}: {IsValid(expression1)}");
+        Console.WriteLine($"{expression2}: {IsValid(expression2)}");
+        Console.WriteLine($"{expression3}: {IsValid(expression3)}");
+        Console.WriteLine($"{expression4}: {IsValid(expression4)}");
+        Console.WriteLine($"{expression5}: {IsValid(expression5)}");
+        Console.WriteLine($"{expression6}: {IsValid(expression6)}");
+
+
+    }
+}
