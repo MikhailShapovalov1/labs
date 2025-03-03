@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class PostfixEvaluator
+{
+    public static double EvaluatePostfix(string postfixExpression)
+    {
+        string[] tokens = postfixExpression.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        Stack<double> stack = new Stack<double>();
+
+        foreach (string token in tokens)
+        {
+            if (double.TryParse(token, out double number))
+            {
+                stack.Push(number);
+            }
+            else
+            {
+                if (stack.Count < 2)
+                {
+                    throw new InvalidOperationException("Недостаточно операндов для операции.");
+                }
+
+                double operand2 = stack.Pop();
+                double operand1 = stack.Pop();
+
+                switch (token)
+                {
+                    case "+":
+                        stack.Push(operand1 + operand2);
+                        break;
+                    case "-":
+                        stack.Push(operand1 - operand2);
+                        break;
+                    case "*":
+                        stack.Push(operand1 * operand2);
+                        break;
+                    case "/":
+                        if (operand2 == 0)
+                        {
+                            throw new DivideByZeroException("Деление на ноль.");
+                        }
+                        stack.Push(operand1 / operand2);
+                        break;
+                }
+            }
+        }
+
+        if (stack.Count != 1)
+        {
+            throw new InvalidOperationException("Неверное выражение: осталось больше одного операнда в стеке.");
+        }
+
+        return stack.Pop();
+    }
+
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Введите постфиксное выражение (разделенные пробелами):");
+        string postfixExpression = Console.ReadLine();
+
+        try
+        {
+            double result = EvaluatePostfix(postfixExpression);
+            Console.WriteLine("Результат: " + result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Ошибка: " + e.Message);
+        }
+
+    }
+}
