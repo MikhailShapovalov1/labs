@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class ElementAnalyzer
+{
+    public static void AnalyzeElements(List<string> elements)
+    {
+        HashSet<string> uniqueElements = new HashSet<string>(elements);
+
+        Console.WriteLine("Уникальные элементы:");
+        foreach (string element in uniqueElements)
+        {
+            Console.WriteLine(element);
+        }
+        Dictionary<string, int> elementFrequencies = new Dictionary<string, int>();
+
+        foreach (string element in elements)
+        {
+            if (elementFrequencies.ContainsKey(element))
+            {
+                elementFrequencies[element]++; 
+            }
+            else
+            {
+                elementFrequencies[element] = 1; 
+            }
+        }
+
+        Console.WriteLine("\nЧастота появления элементов:");
+        foreach (var pair in elementFrequencies)
+        {
+            Console.WriteLine($"Элемент: {pair.Key}, Частота: {pair.Value}");
+        }
+    }
+
+    public static void Main(string[] args)
+    {
+        // Пример использования
+        List<string> elementList = new List<string> { "рубль", "доллар", "рубль", "евро", "доллар", "рубль", "тенге" };
+
+        Console.WriteLine("Исходный список элементов:");
+        foreach (string element in elementList)
+        {
+            Console.Write(element + " ");
+        }
+        Console.WriteLine("\n");
+
+        AnalyzeElements(elementList);
+    }
+}
